@@ -1,2 +1,4 @@
+/*.log
 /.vagrant
 /apache-cassandra-*-bin.tar.gz
+/openjdk-*_linux-x64_bin.tar.gz

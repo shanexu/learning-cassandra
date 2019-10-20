@@ -13,15 +13,17 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
 
-  (1..3).each do |i|
-    config.vm.define "node#{i}" do |master|
-      master.vm.hostname = "node#{i}"
-      master.vm.box = "ubuntu/bionic64"
-      master.vm.provider "virtualbox" do |v|
+  hosts = (1..3).map{ |i| {ip: "172.16.0.#{100+i}", name: "node#{i}", hostname: "node#{i}"} }
+  hosts.each do |h|
+    config.vm.define h[:name] do |node|
+      node.vm.hostname = h[:hostname]
+      node.vm.box = "ubuntu/bionic64"
+      node.vm.provider "virtualbox" do |v|
         v.memory = 2048
         v.cpus = 4
       end
-      master.vm.network "private_network", ip: "192.168.2.#{20+i}"
+      node.vm.network "private_network", ip: h[:ip]
+      node.vm.provision "shell", path: "setup.sh", args: [h[:ip], hosts.map{|h| h[:ip]}.join(',')]
     end
   end
 

@@ -1,15 +1,14 @@
 #!/bin/bash
 
-apt-get update && apt install -y python
+apt-get update
+apt install -y python2.7-minimal openjdk-8-jdk-headless
+echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >> /etc/environment
 
 sudo -u vagrant -i bash - <<"EOF"
-tar xzf /vagrant/jdk-8u231-linux-x64.tar.gz
-ln -s jdk1.8.0_231 jdk
 tar xzf /vagrant/apache-cassandra-3.11.4-bin.tar.gz
 ln -s apache-cassandra-3.11.4 cassandra
 cp /vagrant/cassandra-rackdc.properties cassandra/conf/
-echo 'export JAVA_HOME=$HOME/jdk' >> .profile
-echo 'PATH=$JAVA_HOME/bin:$PATH' >> .profile
+mkdir cassandra/logs
 EOF
 
 IP=$1
